@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Транскрибация аудио -> текст</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .upload-area {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+        }
+        
+        .method {
+            margin: 10px 0;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .file-info {
+            margin: 10px 0;
+            color: #668;
+        }
+    </style>
+</head>
+<body>
+    <h1>Транскрибация аудио -> текст</h1>
+    <p>Загрузите аудиозапись</p>
+    
+    <div class="upload-area" id="dropArea">
+        Выбирете файл или перетащите 
+        <br><br>
+        <input type="file" id="fileInput" accept=".wav,.mp3,.opus,.ogg,.flac,.mp4,.mov,.avi,.mkv" style="display: none;">
+        <button onclick="document.getElementById('fileInput').click()">Выбрать файл</button>
+    </div>
+    
+    <div id="selectedFile" class="file-info">Файл не выбран!</div>
+    
+    <button id="recognizeBtn" onclick="recognize()" disabled>Распознать</button>
+    
+    <div id="loading" class="loading">Загрузка...</div>
+    
+    <div id="result" class="result" style="display: none;">
+        <div class="method">
+            <strong>CTC:</strong> <span id="ctcResult"></span>
+        </div>
+        <div class="method">
+            <strong>Внимание:</strong> <span id="attentionResult"></span>
+        </div>
+        <div id="fileInfo" class="file-info"></div>
+    </div>
+    
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const dropArea = document.getElementById('dropArea');
+        const selectedFile = document.getElementById('selectedFile');
+        const recognizeBtn = document.getElementById('recognizeBtn');
+        const loading = document.getElementById('loading');
+        const resultDiv = document.getElementById('result');
+        const ctcResult = document.getElementById('ctcResult');
+        const attentionResult = document.getElementById('attentionResult');
+        const fileInfo = document.getElementById('fileInfo');
+        
+        let currentFile = null;
+        
+        fileInput.addEventListener('change', function(e) {
+            if (this.files.length > 0) {
+                handleFile(this.files[0]);
+            }
+        });
+        
+        dropArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            dropArea.style.borderColor = '#007bff';
+        });
+        
+        dropArea.addEventListener('dragleave', function(e) {
+            dropArea.style.borderColor = '#ccc';
+        });
+        
+        dropArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            dropArea.style.borderColor = '#ccc';
+            
+            if (e.dataTransfer.files.length > 0) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+        
+        function handleFile(file) {
+            if (file.size > 50 * 1024 * 1024) {
+                alert('файл слишком большой (макс 50MB)');
+                return;
+            }
+            
+            currentFile = file;
+            selectedFile.textContent = `выбран файл: ${file.name} (${formatBytes(file.size)})`;
+            recognizeBtn.disabled = false;
+            resultDiv.style.display = 'none';
+        }
+        
+        async function recognize() {
+            if (!currentFile) return;
+            
+            const formData = new FormData();
+            formData.append('file', currentFile);
+            
+            loading.style.display = 'block';
+            recognizeBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/recognize', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    ctcResult.textContent = data.ctc_text;
+                    attentionResult.textContent = data.attention_text;
+                    
+                    fileInfo.innerHTML = `
+                        файл: ${data.filename}<br>
+                        продолжительность: ${data.duration.toFixed(2)} секунд<br>
+                        время: ${data.processing_time_ms.toFixed(0)} мс
+                        ${data.message ? `<br>${data.message}` : ''}
+                    `;
+                    
+                    resultDiv.style.display = 'block';
+                } else {
+                    throw new Error(data.detail || 'ошибка сервера');
+                }
+            } catch (error) {
+                alert('ошибка: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+                recognizeBtn.disabled = false;
+            }
+        }
+        
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+    </script>
+</body>
+</html>
