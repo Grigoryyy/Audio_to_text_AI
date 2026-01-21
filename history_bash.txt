@@ -1,0 +1,130 @@
+    1  sudo apt install ./anydesk_7.1.1-1_arm64.deb 
+    2  sudo apt update
+    3  sudo apt install ./anydesk_7.1.1-1_arm64.deb 
+    4  sudo apt install ./anydesk_7.1.0-1_arm64.deb 
+    5  sudo apt install wget mc curl
+    6  wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    7  sudo dpkg -i google-chrome-stable_current_amd64.deb
+    8  sudo apt --fix-broken install
+    9  sudo apt install ./anydesk_7.1.0-1_arm64.deb 
+   10  sudo apt search anydesk
+   11  sudo snap search anydesk
+   12  sudo apt --fix-missing
+   13  sudo apt fix-missing
+   14  sudo apt update --fix-missing
+   15  sudo apt install ./anydesk_7.1.1-1_arm64.deb 
+   16  sudo apt update
+   17  sudo apt upgrade
+   18  sudo apt install ./anydesk_7.1.1-1_arm64.deb 
+   19  wget -O http://download.faceneurovision.com/ubuntu/install_nvidia_driver.sh
+   20  wget http://download.faceneurovision.com/ubuntu/install_nvidia_driver.sh
+   21  sudo apt search nvidia
+   22  sudo apt install nvidia-driver-565
+   23  sudo apt search nvidia-drive
+   24  sudo apt install nvidia-driver-550
+   25  sudo reboot now
+   26  nvidia-smi
+   27  sudo apt install python3.12
+   28  cd ML/diploms/kirillov/
+   29  ls
+   30  tree radio_2 | grep -v opus | grep -v txt
+   31  sudo apt  install tree 
+   32  tree radio_2 | grep -v opus | grep -v txt
+   33  tree radio_2 | grep -v opus | grep -v txt | tail -n 20
+   34  tree radio_2 | grep -v opus | grep -v txt | tail -n 100
+   35  tree radio_2 | grep -v opus | grep -v txt | tail -n 200
+   36  clear
+   37  tree radio_2 | grep -v opus | grep -v txt 
+   38  ls
+   39  cd radio_2
+   40  ls
+   41  ls 0
+   42  cd ..
+   43  cd radio_pspeech_sample_manifest/
+   44  ls
+   45  mc
+   46  cd..
+   47  cd ..
+   48  tree radio_pspeech_sample_manifest
+   49  tree radio_pspeech_sample_manifest | grep -v opus|text
+   50  tree radio_pspeech_sample_manifest | grep -v opus||text
+   51  tree radio_pspeech_sample_manifest | grep -v opus&text
+   52  python -m ensurepip --upgrade
+   53  python3 -m ensurepip --upgrade
+   54  python3 -m pip install numpy==1.26
+   55  sudo apt install python3-pip
+   56  pip3 --version
+   57  pip3 install ipykernel
+   58  python3 -m pip3 install ipykernel
+   59  python3 -m pip install ipykernel
+   60  python3 -m venv .venv
+   61  sudo apt install python3.12-venv
+   62  python3 -m venv .venv
+   63  source .venv/bin/activate
+   64  python3 -m pip install ipykernel
+   65  cd ML/diploms/kirillov/
+   66  tree radio_pspeech_sample_manifest | grep -v "text|opus"
+   67  tree radio_pspeech_sample_manifest | grep -v text | grep -v opus
+   68  tree radio_pspeech_sample_manifest | grep -v opus||txt
+   69  tree radio_pspeech_sample_manifest | grep -v "txt|opus"
+   70  tree radio_pspeech_sample_manifest | grep -v txt | grep -v opus
+   71  tree radio_pspeech_sample_manifest | grep -v txt | grep -v opus | head 
+   72  cd radio_pspeech_sample_manifest/
+   73  ls
+   74  cd ..
+   75  ls
+   76  cat radio_2.csv | head -n 10
+   77  cat radio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csvradio_pspeech_sample_manifest.csv | head -n 10
+   78  cat radio_pspeech_sample_manifest.csv | head -n 5
+   79  echo "Общие файлы: $(comm -12 <(cut -d'/' -f4 radio_2.csv | cut -d'.' -f1 | sort) <(cut -d'/' -f4 radio_pspeech_sample_manifest.csv | cut -d'.' -f1 | sort) | wc -l)"
+   80  comm -12 <(cut -d'/' -f4 radio_2.csv | cut -d'.' -f1 | sort) <(cut -d'/' -f4 radio_pspeech_sample_manifest.csv | cut -d'.' -f1 | sort)
+   81  cd radio_pspeech_sample_manifest/public_speech/
+   82  ls | grep 36c31377d9d0
+   83  ls | grep 71778d6e1a18
+   84  cd ../
+   85  ls
+   86  cd ../
+   87  tree radio_pspeech_sample_manifest | grep 9498b16229d0
+   88  find comm -12 <(cut -d'/' -f4 radio_2.csv | cut -d'.' -f1 | sort) <(cut -d'/' -f4 radio_pspeech_sample_manifest.csv | cut -d'.' -f1 | sort)
+   89  36c31377d9d0
+   90  71778d6e1a18
+   91  9498b16229d0
+   92  find 9498b16229d0
+   93  find 9498b16229d0.txt
+   94  find -n 9498b16229d0.txt
+   95  find --help
+   96  find radio_pspeech_sample_manifest -name "*36c31377d9d0*" -o -name "*71778d6e1a18*" -o -name "*9498b16229d0*"
+   97  rm radio_pspeech_sample_manifest/radio-v4/d/7d/9498b16229d0.opus
+   98  rm radio_pspeech_sample_manifest/radio-v4/d/7d/9498b16229d0.txt
+   99  rm radio_pspeech_sample_manifest/radio-v4/2/93/71778d6e1a18.opus
+  100  rm radio_pspeech_sample_manifest/radio-v4/2/93/71778d6e1a18.txt
+  101  rm radio_pspeech_sample_manifest/radio-v4/e/a6/36c31377d9d0.opus
+  102  rm radio_pspeech_sample_manifest/radio-v4/e/a6/36c31377d9d0.txt
+  103  grep -vE "(36c31377d9d0|71778d6e1a18|9498b16229d0)" radio_pspeech_sample_manifest.csv | sed 's/ //g' > radio_pspeech_sample_manifest_cleaned.csv
+  104  ды
+  105  ls
+  106  cat radio_pspeech_sample_manifest.csv | grep 36c31377d9d0
+  107  grep -v '^$' radio_pspeech_sample_manifest.csv > radio_pspeech_sample_manifest_cleaned.csv
+  108  wc radio_pspeech_sample_manifest
+  109  wc -l radio_pspeech_sample_manifest
+  110  wc -l radio_pspeech_sample_manifest.csv 
+  111  wc -l radio_2.csv 
+  112  cat radio_2.csv | head -5
+  113  cat radio_pspeech_sample_manifest.csv | head -5
+  114  { echo "audio_path,text_path,duration"; cat radio_2.csv radio_pspeech_sample_manifest.csv; } > combined_dataset.csv && echo "Готово! $(wc -l < combined_dataset.csv) строк"
+  115  cd ML/diploms/rodnikova/
+  116  ls
+  117  wc -l ru_semantic_dataset.json
+  118  wc -w ru_semantic_dataset.json
+  119  ps aux | grep sentencepiece
+  120  source /home/grigory/ML/diploms/kirillov/.venv/bin/activate
+  121  nvidia-smi
+  122  ps aux grep kirillov/.venv/bin/python
+  123  ps aux | grep "kirillov/.venv/bin/python"
+  124  nvidia-smi
+  125  pwd
+  126  ls
+  127  history
+  128  cd ../../../
+  129  cd ../
+  130  history > history_bash.txt
