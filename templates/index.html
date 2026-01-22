@@ -1,181 +1,293 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Транскрибация аудио -> текст</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-        
-        .upload-area {
-            border: 2px dashed #ccc;
-            padding: 40px;
-            text-align: center;
-            margin: 20px 0;
-            cursor: pointer;
-        }
-        
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f5f5f5;
-        }
-        
-        .method {
-            margin: 10px 0;
-        }
-        
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 10px 0;
-        }
-        
-        .file-info {
-            margin: 10px 0;
-            color: #668;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSpeech2 Transcribation</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Транскрибация аудио -> текст</h1>
-    <p>Загрузите аудиозапись</p>
-    
-    <div class="upload-area" id="dropArea">
-        Выбирете файл или перетащите 
-        <br><br>
-        <input type="file" id="fileInput" accept=".wav,.mp3,.opus,.ogg,.flac,.mp4,.mov,.avi,.mkv" style="display: none;">
-        <button onclick="document.getElementById('fileInput').click()">Выбрать файл</button>
-    </div>
-    
-    <div id="selectedFile" class="file-info">Файл не выбран!</div>
-    
-    <button id="recognizeBtn" onclick="recognize()" disabled>Распознать</button>
-    
-    <div id="loading" class="loading">Загрузка...</div>
-    
-    <div id="result" class="result" style="display: none;">
-        <div class="method">
-            <strong>CTC:</strong> <span id="ctcResult"></span>
+    <div class="container">
+        <header class="header">
+            <h1>DeepSpeech2 Transcribation</h1>
+            <p>Распознавание русской речи из аудио и видео файлов (до 2 часов)</p>
+            <div id="modelStatus" class="model-status status-offline">
+                <div class="status-dot"></div>
+                <span>Model: Loading...</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="card upload-section">
+                <h2>Загрузите аудио/видео файл</h2>
+                
+                <div class="upload-area" id="dropArea">
+                    <p>Перетащите файл сюда или</p>
+                    <input type="file" id="audioFile" class="file-input" accept=".wav,.mp3,.opus,.ogg,.flac,.m4a,.aac,.mp4,.mov,.avi,.mkv,.webm">
+                    <label for="audioFile" class="file-label">Выбрать файл</label>
+                    <div class="selected-file" id="selectedFile">
+                        Файл не выбран
+                    </div>
+                </div>
+
+                <div class="save-path">
+                    <label for="savePath">Сохранить как (.txt):</label>
+                    <input type="text" id="savePath" placeholder="/home/user/transcript.txt (опционально)">
+                </div>
+
+                <button class="btn" id="recognizeBtn" disabled>Распознать речь</button>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Обработка аудио...</p>
+                </div>
+
+                <div class="alert" id="alert"></div>
+            </div>
+
+            <div class="card results-section">
+                <h2>Результат распознавания</h2>
+                
+                <div class="result-item">
+                    <h3>Текст</h3>
+                    <div class="result-text" id="transcriptResult">
+                        Результат появится здесь
+                    </div>
+                </div>
+
+                <div class="result-item">
+                    <h3>Информация о файле</h3>
+                    <div id="fileInfo">
+                        <p>Загрузите файл для получения информации</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card info-section">
+                <h2>Информация о сервисе</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>Поддерживаемые форматы</h4>
+                        <div class="supported-formats">
+                            <span class="format-tag">WAV</span>
+                            <span class="format-tag">MP3</span>
+                            <span class="format-tag">Opus</span>
+                            <span class="format-tag">OGG</span>
+                            <span class="format-tag">FLAC</span>
+                            <span class="format-tag">M4A</span>
+                            <span class="format-tag">AAC</span>
+                            <span class="format-tag">MP4</span>
+                            <span class="format-tag">MOV</span>
+                            <span class="format-tag">AVI</span>
+                            <span class="format-tag">MKV</span>
+                            <span class="format-tag">WebM</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h4>Максимальная длина</h4>
+                        <p id="maxLength">2 часа</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h4>Частота дискретизации</h4>
+                        <p id="sampleRate">16000 Hz</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h4>Ограничения</h4>
+                        <p>Разбивка на чанки по 11 сек</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="method">
-            <strong>Внимание:</strong> <span id="attentionResult"></span>
-        </div>
-        <div id="fileInfo" class="file-info"></div>
+
+        <footer class="footer">
+            <p>DeepSpeech2 Transcribation API v1.0</p>
+            <p>Для обработки видео требуется установленный FFmpeg</p>
+        </footer>
     </div>
-    
+
     <script>
-        const fileInput = document.getElementById('fileInput');
-        const dropArea = document.getElementById('dropArea');
-        const selectedFile = document.getElementById('selectedFile');
-        const recognizeBtn = document.getElementById('recognizeBtn');
-        const loading = document.getElementById('loading');
-        const resultDiv = document.getElementById('result');
-        const ctcResult = document.getElementById('ctcResult');
-        const attentionResult = document.getElementById('attentionResult');
-        const fileInfo = document.getElementById('fileInfo');
-        
-        let currentFile = null;
-        
-        fileInput.addEventListener('change', function(e) {
-            if (this.files.length > 0) {
-                handleFile(this.files[0]);
-            }
-        });
-        
-        dropArea.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            dropArea.style.borderColor = '#007bff';
-        });
-        
-        dropArea.addEventListener('dragleave', function(e) {
-            dropArea.style.borderColor = '#ccc';
-        });
-        
-        dropArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            dropArea.style.borderColor = '#ccc';
-            
-            if (e.dataTransfer.files.length > 0) {
-                handleFile(e.dataTransfer.files[0]);
-            }
-        });
-        
-        function handleFile(file) {
-            if (file.size > 50 * 1024 * 1024) {
-                alert('файл слишком большой (макс 50MB)');
-                return;
-            }
-            
-            currentFile = file;
-            selectedFile.textContent = `выбран файл: ${file.name} (${formatBytes(file.size)})`;
-            recognizeBtn.disabled = false;
-            resultDiv.style.display = 'none';
-        }
-        
-        async function recognize() {
-            if (!currentFile) return;
-            
-            const formData = new FormData();
-            formData.append('file', currentFile);
-            
-            loading.style.display = 'block';
-            recognizeBtn.disabled = true;
-            
-            try {
-                const response = await fetch('/api/recognize', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    ctcResult.textContent = data.ctc_text;
-                    attentionResult.textContent = data.attention_text;
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropArea = document.getElementById('dropArea');
+            const fileInput = document.getElementById('audioFile');
+            const selectedFile = document.getElementById('selectedFile');
+            const recognizeBtn = document.getElementById('recognizeBtn');
+            const loading = document.getElementById('loading');
+            const alertBox = document.getElementById('alert');
+            const transcriptResult = document.getElementById('transcriptResult');
+            const fileInfo = document.getElementById('fileInfo');
+            const modelStatus = document.getElementById('modelStatus');
+            const maxLength = document.getElementById('maxLength');
+            const sampleRate = document.getElementById('sampleRate');
+
+            let currentFile = null;
+
+            // Проверка статуса модели
+            async function checkStatus() {
+                try {
+                    const response = await fetch('/health');
+                    const data = await response.json();
                     
-                    fileInfo.innerHTML = `
-                        файл: ${data.filename}<br>
-                        продолжительность: ${data.duration.toFixed(2)} секунд<br>
-                        время: ${data.processing_time_ms.toFixed(0)} мс
-                        ${data.message ? `<br>${data.message}` : ''}
-                    `;
+                    if (data.status === 'healthy') {
+                        modelStatus.className = 'model-status status-online';
+                        modelStatus.innerHTML = `
+                            <div class="status-dot"></div>
+                            <span>Model: Loaded</span>
+                        `;
+                    } else {
+                        modelStatus.className = 'model-status status-offline';
+                        modelStatus.innerHTML = `
+                            <div class="status-dot"></div>
+                            <span>Model: Not loaded</span>
+                        `;
+                    }
                     
-                    resultDiv.style.display = 'block';
-                } else {
-                    throw new Error(data.detail || 'ошибка сервера');
+                    if (data.max_duration_hours) {
+                        maxLength.textContent = `${data.max_duration_hours} часа`;
+                    }
+                } catch (error) {
+                    console.error('Status check failed:', error);
                 }
-            } catch (error) {
-                alert('ошибка: ' + error.message);
-            } finally {
-                loading.style.display = 'none';
-                recognizeBtn.disabled = false;
             }
-        }
-        
-        function formatBytes(bytes) {
-            if (bytes < 1024) return bytes + ' B';
-            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-            return (bytes / 1048576).toFixed(1) + ' MB';
-        }
+
+            checkStatus();
+
+            // Drag and drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                dropArea.classList.add('dragover');
+            }
+
+            function unhighlight() {
+                dropArea.classList.remove('dragover');
+            }
+
+            dropArea.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            }
+
+            fileInput.addEventListener('change', function(e) {
+                if (this.files.length > 0) {
+                    handleFile(this.files[0]);
+                }
+            });
+
+            function handleFile(file) {
+                if (file.size > 500 * 1024 * 1024) { // 500 MB для 2 часов
+                    showAlert('Файл слишком большой (максимум 500 MB)', 'error');
+                    return;
+                }
+
+                currentFile = file;
+                selectedFile.textContent = `${file.name} (${formatBytes(file.size)})`;
+                recognizeBtn.disabled = false;
+                fileInfo.innerHTML = `
+                    <p><strong>Имя файла:</strong> ${file.name}</p>
+                    <p><strong>Размер:</strong> ${formatBytes(file.size)}</p>
+                `;
+                transcriptResult.textContent = 'Результат появится здесь';
+                alertBox.style.display = 'none';
+            }
+
+            recognizeBtn.addEventListener('click', async function() {
+                if (!currentFile) {
+                    showAlert('Пожалуйста, выберите файл', 'error');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('file', currentFile);
+                const savePath = document.getElementById('savePath').value.trim();
+                if (savePath) {
+                    formData.append('output_path', savePath);
+                }
+
+                loading.classList.add('active');
+                recognizeBtn.disabled = true;
+
+                try {
+                    const response = await fetch('/api/transcribe', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        transcriptResult.textContent = result.text || '[пусто]';
+                        
+                        fileInfo.innerHTML = `
+                            <p><strong>Имя файла:</strong> ${result.filename}</p>
+                            <p><strong>Длительность:</strong> ${result.duration_sec.toFixed(2)} сек</p>
+                            <p><strong>Чанков обработано:</strong> ${result.chunks_processed}</p>
+                            ${result.output_file ? `<p><strong>Сохранено в:</strong> ${result.output_file}</p>` : ''}
+                        `;
+
+                        showAlert('Распознавание завершено успешно', 'success');
+                    } else {
+                        throw new Error(result.detail || 'Ошибка сервера');
+                    }
+                } catch (error) {
+                    showAlert(`Ошибка: ${error.message}`, 'error');
+                    console.error('Recognition error:', error);
+                } finally {
+                    loading.classList.remove('active');
+                    recognizeBtn.disabled = false;
+                }
+            });
+
+            function showAlert(message, type) {
+                alertBox.textContent = message;
+                alertBox.className = `alert ${type}`;
+                alertBox.style.display = 'block';
+                setTimeout(() => {
+                    alertBox.style.display = 'none';
+                }, 5000);
+            }
+
+            function formatBytes(bytes, decimals = 2) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const dm = decimals < 0 ? 0 : decimals;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+            }
+
+            // Загрузка информации о сервисе
+            fetch('/api/info')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sample_rate) {
+                        sampleRate.textContent = data.sample_rate + ' Hz';
+                    }
+                })
+                .catch(console.error);
+        });
     </script>
 </body>
 </html>
