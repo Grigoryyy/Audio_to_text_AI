@@ -75,6 +75,7 @@ class DeepSpeech2(nn.Module):
         x, _ = self.rnn(x)
         return self.fc(x)
 
+
 class AudioProcessor:
     @staticmethod
     def convert_video_to_wav(input_path: str) -> str:
