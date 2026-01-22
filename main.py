@@ -25,7 +25,7 @@ class Config:
     SAMPLE_RATE = 16000
     N_MELS = 80
     MAX_DURATION = 7200.0
-    MAX_CHUNK_DURATION = 30.0
+    MAX_CHUNK_DURATION = 15.0
     HOP_LENGTH = 160
     N_FFT = 512
 
